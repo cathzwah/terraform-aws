@@ -12,7 +12,7 @@ data "terraform_remote_state" "db" {
   config {
     bucket = "${var.db_remote_state_bucket}"
     key    = "${var.db_remote_state_key}"
-    region = "eu-central-1"
+    region = "${var.aws_region}"
   }
 }
 
@@ -73,7 +73,7 @@ resource "aws_security_group_rule" "allow_all_outbound" {
 
 # Auto-scaling group for webserver
 resource "aws_launch_configuration" "webserver" {
-  image_id               = "ami-060cde69"
+  image_id               = "${var.ami}" # "ami-060cde69"
   instance_type          = "${var.instance_type}"
   security_groups = ["${aws_security_group.instance.id}"]
 
