@@ -2,7 +2,6 @@ variable "aws_region" {
   description = "The AWS region to use"
 }
 
-
 variable "cluster_name" {
   description = "The name to use for all the cluster resources"
 }
@@ -17,7 +16,7 @@ variable "db_remote_state_key" {
 
 variable "ami" {
   description = "The AMI to run in the cluster"
-  default =  "ami-060cde69"
+  default     = "ami-060cde69"
 }
 
 variable "instance_type" {

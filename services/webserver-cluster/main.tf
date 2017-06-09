@@ -2,7 +2,6 @@ terraform {
   required_version = ">= 0.9"
 }
 
-
 data "aws_availability_zones" "all" {}
 
 # retrieve state for database
@@ -18,13 +17,13 @@ data "terraform_remote_state" "db" {
 
 data "template_file" "user_data" {
   template = "${file("${path.module}/user-data.sh")}"
-    vars {
-      server_port = "${var.server_port}"
-      db_address  = "${data.terraform_remote_state.db.address}"
-      db_port     = "${data.terraform_remote_state.db.port}"
-  } 
-}
 
+  vars {
+    server_port = "${var.server_port}"
+    db_address  = "${data.terraform_remote_state.db.address}"
+    db_port     = "${data.terraform_remote_state.db.port}"
+  }
+}
 
 resource "aws_elb" "example" {
   name               = "${var.cluster_name}"
@@ -73,13 +72,13 @@ resource "aws_security_group_rule" "allow_all_outbound" {
 
 # Auto-scaling group for webserver
 resource "aws_launch_configuration" "webserver" {
-  image_id               = "${var.ami}" # "ami-060cde69"
-  instance_type          = "${var.instance_type}"
+  image_id        = "${var.ami}"                          # "ami-060cde69"
+  instance_type   = "${var.instance_type}"
   security_groups = ["${aws_security_group.instance.id}"]
 
   user_data = "${data.template_file.user_data.rendered}"
 
-  lifecycle { 
+  lifecycle {
     create_before_destroy = true
   }
 }
@@ -111,10 +110,10 @@ resource "aws_autoscaling_group" "webserver" {
 
   min_size = "${var.min_size}"
   max_size = "${var.max_size}"
-  
+
   tag {
-    key = "Name"
-    value = "${var.cluster_name}"
+    key                 = "Name"
+    value               = "${var.cluster_name}"
     propagate_at_launch = true
   }
 }
